@@ -1,0 +1,9 @@
+/Common/图像识别模型与训练/*.pt
+/Common/图像识别模型与训练/flower_data
+/Common/flask预测/flower_data
+/Common/flask预测/best.pth
+/Common/Flask预测Web/best.pth
+/Common/Flask预测Web/flower_data
+/Common/DataLoader自定义数据集制作/flower_data
+__pycache__
+.idea
