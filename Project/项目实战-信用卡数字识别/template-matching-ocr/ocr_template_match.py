@@ -7,9 +7,9 @@ import myutils
 
 # 设置参数
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True,
+ap.add_argument("-i", "--image", required=False, default="./images/credit_card_01.png",
 	help="path to input image")
-ap.add_argument("-t", "--template", required=True,
+ap.add_argument("-t", "--template", required=False, default="./ocr_a_reference.png",
 	help="path to template OCR-A image")
 args = vars(ap.parse_args())
 
@@ -39,11 +39,13 @@ cv_show('ref',ref)
 #cv2.findContours()函数接受的参数为二值图，即黑白的（不是灰度图）,cv2.RETR_EXTERNAL只检测外轮廓，cv2.CHAIN_APPROX_SIMPLE只保留终点坐标
 #返回的list中每个元素都是图像中的一个轮廓
 
-ref_, refCnts, hierarchy = cv2.findContours(ref.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+# ref_, refCnts, hierarchy = cv2.findContours(ref.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+refCnts, hierarchy = cv2.findContours(ref.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
 cv2.drawContours(img,refCnts,-1,(0,0,255),3) 
 cv_show('img',img)
-print (np.array(refCnts).shape)
+# print(np.array(refCnts).shape)
+print(len(refCnts))
 refCnts = myutils.sort_contours(refCnts, method="left-to-right")[0] #排序，从左到右，从上到下
 digits = {}
 
@@ -99,7 +101,8 @@ cv_show('thresh',thresh)
 
 # 计算轮廓
 
-thresh_, threshCnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+# thresh_, threshCnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+threshCnts, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 
 cnts = threshCnts
@@ -138,7 +141,8 @@ for (i, (gX, gY, gW, gH)) in enumerate(locs):
 		cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 	cv_show('group',group)
 	# 计算每一组的轮廓
-	group_,digitCnts,hierarchy = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL,
+	digitCnts,hierarchy = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL,
+	# group_,digitCnts,hierarchy = cv2.findContours(group.copy(), cv2.RETR_EXTERNAL,
 		cv2.CHAIN_APPROX_SIMPLE)
 	digitCnts = contours.sort_contours(digitCnts,
 		method="left-to-right")[0]
